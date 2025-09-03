@@ -10,9 +10,9 @@ exclude = [
 ]
 
 [workspace.package]
-authors = ["j50301m@yahoo.com.tw"]
+authors = ["j50301m <j50301m@yahoo.com.tw>"]
 edition = "2024"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/YOUR_USERNAME/cfgloader_rs"
+repository = "https://github.com/j50301m/cfgloader_rs"
 
 

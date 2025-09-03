@@ -1,26 +1,26 @@
 //! # CFGLoader
-//! 
+//!
 //! A simple, powerful, and ergonomic configuration loading library for Rust applications.
-//! 
-//! CFGLoader automatically loads configuration from environment variables and `.env` files 
+//!
+//! CFGLoader automatically loads configuration from environment variables and `.env` files
 //! with compile-time validation and type safety.
-//! 
+//!
 //! ## Installation
-//! 
+//!
 //! Add this to your `Cargo.toml`:
-//! 
+//!
 //! ```toml
 //! [dependencies]
 //! cfgloader_rs = "0.1"
 //! ```
-//! 
+//!
 //! ## Quick Start
-//! 
+//!
 //! ### Basic Usage
-//! 
+//!
 //! ```rust,no_run
 //! use cfgloader_rs::*;
-//! 
+//!
 //! #[derive(FromEnv, Debug)]
 //! struct Config {
 //!     #[env("DATABASE_URL", default = "sqlite://app.db")]
@@ -35,21 +35,21 @@
 //!     #[env("FEATURES", default = "auth,logging", split = ",")]
 //!     features: Vec<String>,
 //! }
-//! 
+//!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
 //!     let config = Config::load(std::path::Path::new(".env"))?;
 //!     println!("Config: {:#?}", config);
 //!     Ok(())
 //! }
 //! ```
-//! 
+//!
 //! ### Nested Configuration
-//! 
+//!
 //! Organize your configuration into logical groups:
-//! 
+//!
 //! ```rust,no_run
 //! use cfgloader_rs::*;
-//! 
+//!
 //! #[derive(FromEnv, Debug)]
 //! struct AppConfig {
 //!     #[env("APP_NAME", required)]
@@ -59,7 +59,7 @@
 //!     server: ServerConfig,
 //!     database: DatabaseConfig,
 //! }
-//! 
+//!
 //! #[derive(FromEnv, Debug)]
 //! struct ServerConfig {
 //!     #[env("SERVER_HOST", default = "127.0.0.1")]
@@ -68,7 +68,7 @@
 //!     #[env("SERVER_PORT", default = "8080")]
 //!     port: u16,
 //! }
-//! 
+//!
 //! #[derive(FromEnv, Debug)]
 //! struct DatabaseConfig {
 //!     #[env("DB_URL", required)]
@@ -77,7 +77,7 @@
 //!     #[env("DB_MAX_CONNECTIONS", default = "10")]
 //!     max_connections: u32,
 //! }
-//! 
+//!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
 //!     let config = AppConfig::load(std::path::Path::new(".env"))?;
 //!     

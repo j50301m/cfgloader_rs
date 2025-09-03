@@ -36,7 +36,7 @@ pub enum CfgError {
         msg: &'static str,
         #[source]
         source: Box<dyn std::error::Error + Send + Sync>,
-    }
+    },
 }
 
 pub trait FromEnv: Sized {
@@ -62,10 +62,7 @@ pub fn load_env_file(env_path: &std::path::Path) -> Result<(), CfgError> {
 }
 
 /// Utility function for macros: parse string to T
-pub fn parse_scalar<T: std::str::FromStr>(
-    key: &'static str,
-    raw: String,
-) -> Result<T, CfgError>
+pub fn parse_scalar<T: std::str::FromStr>(key: &'static str, raw: String) -> Result<T, CfgError>
 where
     <T as std::str::FromStr>::Err: std::error::Error + Send + Sync + 'static,
 {

@@ -2,7 +2,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/cfgloader_rs.svg)](https://crates.io/crates/cfgloader_rs)
 [![Documentation](https://docs.rs/cfgloader_rs/badge.svg)](https://docs.rs/cfgloader_rs)
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/YOUR_USERNAME/cfgloader_rs#license)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/j50301m/cfgloader_rs#license)
 
 A simple, powerful, and ergonomic configuration loading library for Rust applications. CFGLoader automatically loads configuration from environment variables and `.env` files with compile-time validation and type safety.
 

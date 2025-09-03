@@ -1,13 +1,13 @@
 [package]
 name = "cfgloader_rs"
 version = "0.1.0"
-edition = "2021"
-authors = ["Your Name <your.email@example.com>"]
+edition = "2024"
+authors = ["j50301m <j50301m@yahoo.com.tw>"]
 description = "A simple, powerful, and ergonomic configuration loading library for Rust applications"
 keywords = ["config", "environment", "dotenv", "configuration", "env"]
 categories = ["config", "development-tools"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/YOUR_USERNAME/cfgloader_rs"
+repository = "https://github.com/j50301m/cfgloader_rs"
 documentation = "https://docs.rs/cfgloader_rs"
 readme = "../README.md"
 exclude = [

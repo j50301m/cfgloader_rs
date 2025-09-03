@@ -1,12 +1,12 @@
 //! Procedural macros for cfgloader
-//! 
+//!
 //! This crate provides the `FromEnv` derive macro that automatically generates
 //! configuration loading code from environment variables.
 
 // Proc macro implementation
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Data, DeriveInput, Fields};
+use syn::{Data, DeriveInput, Fields, parse_macro_input};
 
 #[proc_macro_derive(FromEnv, attributes(env))]
 pub fn derive_from_env(input: TokenStream) -> TokenStream {
@@ -22,16 +22,13 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                     "FromEnv only supports structs with named fields",
                 )
                 .to_compile_error()
-                .into()
+                .into();
             }
         },
         _ => {
-            return syn::Error::new_spanned(
-                name,
-                "FromEnv only supports structs",
-            )
-            .to_compile_error()
-            .into()
+            return syn::Error::new_spanned(name, "FromEnv only supports structs")
+                .to_compile_error()
+                .into();
         }
     };
 
@@ -54,22 +51,22 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                 syn::Meta::List(list) => {
                     let tokens = &list.tokens;
                     let content = tokens.to_string();
-                    
+
                     // Parse something like "DB_URL", default = "sqlite://test.db"
                     if content.starts_with('"') {
                         // Find the first string literal as the key
                         if let Some(first_quote_end) = content[1..].find('"') {
                             let key = &content[1..first_quote_end + 1];
                             key_tokens = Some(quote! { #key });
-                            
+
                             // Look for additional arguments after the key
                             let remaining = &content[first_quote_end + 2..];
-                            
+
                             // Parse default = "..."
                             if let Some(default_start) = remaining.find("default") {
                                 let default_part = &remaining[default_start..];
                                 if let Some(eq_pos) = default_part.find('=') {
-                                    let value_part = default_part[eq_pos+1..].trim();
+                                    let value_part = default_part[eq_pos + 1..].trim();
                                     if value_part.starts_with('"') {
                                         if let Some(end_quote) = value_part[1..].find('"') {
                                             let value = &value_part[1..end_quote + 1];
@@ -78,17 +75,17 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                                     }
                                 }
                             }
-                            
+
                             // Check for required
                             if remaining.contains("required") {
                                 required = true;
                             }
-                            
+
                             // Parse split = "..."
                             if let Some(split_start) = remaining.find("split") {
                                 let split_part = &remaining[split_start..];
                                 if let Some(eq_pos) = split_part.find('=') {
-                                    let value_part = split_part[eq_pos+1..].trim();
+                                    let value_part = split_part[eq_pos + 1..].trim();
                                     if value_part.starts_with('"') {
                                         if let Some(end_quote) = value_part[1..].find('"') {
                                             let value = &value_part[1..end_quote + 1];
