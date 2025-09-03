@@ -1,6 +1,17 @@
 [workspace]
+resolver = "2"
 members = [
-    "cfgloader",
-    "cfgloader-derive",
+    "cfgloader-core",
+    "cfgloader-macros",
+    "cfgloader"
+]
+exclude = [
     "example"
 ]
+
+[workspace.dependencies]
+dotenvy = "0.15"
+thiserror = "2"
+proc-macro2 = "1"
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = "1"

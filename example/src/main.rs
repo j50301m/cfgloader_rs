@@ -1,7 +1,6 @@
 use std::env;
 
 use cfgloader::*;
-use cfgloader_derive::FromEnv;
 
 #[derive(FromEnv,Debug)]
 struct Config {

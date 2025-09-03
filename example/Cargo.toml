@@ -1,12 +1,10 @@
 [package]
 name = "example"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 cfgloader = { path = "../cfgloader" }
-cfgloader-derive = { path = "../cfgloader-derive" }
-dotenvy = "0.15"
 
 [[bin]]
 name = "example"

@@ -3,7 +3,12 @@ name = "cfgloader"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = ["derive"]
+derive = ["cfgloader-macros"]
+
 [dependencies]
-dotenvy = "0.15"
-thiserror = "2"
-cfgloader-derive = { path = "../cfgloader-derive" }
+cfgloader-core = { path = "../cfgloader-core" }
+
+# Optional dependency on the derive macro
+cfgloader-macros = { path = "../cfgloader-macros", optional = true }
