@@ -81,7 +81,7 @@ struct OtherSettings {
 }
 
 fn main() {
-    let dotenv_path = std::path::Path::new("example/.env");
+    let dotenv_path = std::path::Path::new(".env");
     let config = Config::load(dotenv_path).unwrap();
 
     println!("{:#?}", config);

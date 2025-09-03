@@ -273,7 +273,7 @@ Check out the [example](example/) directory for a complete working example, or r
 
 ```bash
 cd example
-APP_NAME=MyApp cargo run
+cargo run
 ```
 
 For detailed API documentation, visit [docs.rs/cfgloader_rs](https://docs.rs/cfgloader_rs).
