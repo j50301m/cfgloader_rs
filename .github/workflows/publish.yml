@@ -28,38 +28,47 @@ jobs:
       - name: Check version changes
         id: check-versions
         run: |
-          # Check if any Cargo.toml files changed
-          if git diff HEAD~1 HEAD --name-only | grep -E "Cargo\.toml$"; then
-            echo "Cargo.toml files changed, checking versions..."
-            
-            # Check core version
-            if git diff HEAD~1 HEAD core/Cargo.toml | grep -q "^+version"; then
-              echo "core-changed=true" >> $GITHUB_OUTPUT
-              echo "Core version changed"
-            else
-              echo "core-changed=false" >> $GITHUB_OUTPUT
-            fi
-            
-            # Check macros version
-            if git diff HEAD~1 HEAD macros/Cargo.toml | grep -q "^+version"; then
-              echo "macros-changed=true" >> $GITHUB_OUTPUT
-              echo "Macros version changed"
-            else
-              echo "macros-changed=false" >> $GITHUB_OUTPUT
-            fi
+          # For manual dispatch, we can force check all crates or check recent changes
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Manual trigger detected"
+            echo "core-changed=true" >> $GITHUB_OUTPUT
+            echo "macros-changed=true" >> $GITHUB_OUTPUT
+            echo "cfgloader-changed=true" >> $GITHUB_OUTPUT
+            echo "Manual dispatch: will check all crates"
+          else
+            # Check if any Cargo.toml files changed
+            if git diff HEAD~1 HEAD --name-only | grep -E "Cargo\.toml$"; then
+              echo "Cargo.toml files changed, checking versions..."
+              
+              # Check core version
+              if git diff HEAD~1 HEAD core/Cargo.toml | grep -q "^+version"; then
+                echo "core-changed=true" >> $GITHUB_OUTPUT
+                echo "Core version changed"
+              else
+                echo "core-changed=false" >> $GITHUB_OUTPUT
+              fi
+              
+              # Check macros version
+              if git diff HEAD~1 HEAD macros/Cargo.toml | grep -q "^+version"; then
+                echo "macros-changed=true" >> $GITHUB_OUTPUT
+                echo "Macros version changed"
+              else
+                echo "macros-changed=false" >> $GITHUB_OUTPUT
+              fi
 
-            # Check cfgloader version
-            if git diff HEAD~1 HEAD cfgloader/Cargo.toml | grep -q "^+version"; then
-              echo "cfgloader-changed=true" >> $GITHUB_OUTPUT
-              echo "CFGLoader version changed"
+              # Check cfgloader version
+              if git diff HEAD~1 HEAD cfgloader/Cargo.toml | grep -q "^+version"; then
+                echo "cfgloader-changed=true" >> $GITHUB_OUTPUT
+                echo "CFGLoader version changed"
+              else
+                echo "cfgloader-changed=false" >> $GITHUB_OUTPUT
+              fi
             else
+              echo "No Cargo.toml changes detected"
+              echo "core-changed=false" >> $GITHUB_OUTPUT
+              echo "macros-changed=false" >> $GITHUB_OUTPUT
               echo "cfgloader-changed=false" >> $GITHUB_OUTPUT
             fi
-          else
-            echo "No Cargo.toml changes detected"
-            echo "core-changed=false" >> $GITHUB_OUTPUT
-            echo "macros-changed=false" >> $GITHUB_OUTPUT
-            echo "cfgloader-changed=false" >> $GITHUB_OUTPUT
           fi
 
   publish:
