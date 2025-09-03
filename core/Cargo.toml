@@ -1,7 +1,14 @@
 [package]
-name = "core"
+name = "cfgloader-core"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Core functionality for cfgloader - configuration loading library"
+keywords = ["config", "environment", "dotenv", "configuration", "env"]
+categories = ["config", "development-tools"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/YOUR_USERNAME/cfgloader_rs"
+documentation = "https://docs.rs/cfgloader-core"
 
 [dependencies]
 dotenvy = "0.15"

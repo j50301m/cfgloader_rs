@@ -1,13 +1,20 @@
 [package]
-name = "macros"
+name = "cfgloader_rs_macros"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Procedural macros for cfgloader_rs - configuration loading library"
+keywords = ["config", "environment", "dotenv", "configuration", "env", "macro"]
+categories = ["config", "development-tools"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/YOUR_USERNAME/cfgloader_rs"
+documentation = "https://docs.rs/cfgloader_rs_macros"
 
 [lib]
 proc-macro = true
 
 [dependencies]
-core = { path = "../core" }
+cfgloader-core = { version = "0.1.0", path = "../core" }
 proc-macro2 = "1"
 syn = { version = "2", features = ["full", "extra-traits"] }
 quote = "1"

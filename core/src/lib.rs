@@ -43,7 +43,7 @@ pub trait FromEnv: Sized {
     fn load(env_path: &std::path::Path) -> Result<Self, CfgError>;
 }
 
-/// Utility function for macros: read env and return Option<String>
+/// Utility function for macros: read env and return `Option<String>`
 pub fn get_env(key: &'static str) -> Option<String> {
     env::var(key).ok()
 }
@@ -77,7 +77,7 @@ where
     })
 }
 
-/// Split string and parse each part to Vec<T>
+/// Split string and parse each part to `Vec<T>`
 pub fn parse_vec<T: std::str::FromStr>(
     key: &'static str,
     raw: String,
