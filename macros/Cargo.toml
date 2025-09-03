@@ -1,14 +1,15 @@
 [package]
 name = "cfgloader_rs_macros"
-version = "0.1.0"
-edition = "2024"
-authors = ["j50301m <j50301m@yahoo.com.tw>"]
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
 description = "Procedural macros for cfgloader_rs - configuration loading library"
 keywords = ["config", "environment", "dotenv", "configuration", "macro"]
 categories = ["config", "development-tools"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/j50301m/cfgloader_rs"
+license.workspace = true
+repository.workspace = true
 documentation = "https://docs.rs/cfgloader_rs_macros"
+readme = "../README.md"
 
 [lib]
 proc-macro = true
