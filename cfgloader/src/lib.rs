@@ -1,6 +1,6 @@
 // Re-export all core functionality
-pub use cfgloader_core::*;
+pub use core::*;
 
 // Re-export derive macro when derive feature is enabled
 #[cfg(feature = "derive")]
-pub use cfgloader_macros::FromEnv;
+pub use macros::FromEnv;

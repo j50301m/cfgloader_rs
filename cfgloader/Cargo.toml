@@ -5,10 +5,10 @@ edition = "2024"
 
 [features]
 default = ["derive"]
-derive = ["cfgloader-macros"]
+derive = ["macros"]
 
 [dependencies]
-cfgloader-core = { path = "../cfgloader-core" }
+core = { path = "../core" }
 
 # Optional dependency on the derive macro
-cfgloader-macros = { path = "../cfgloader-macros", optional = true }
+macros = { path = "../macros", optional = true }

@@ -176,8 +176,8 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
     let expanded = quote! {
         impl ::cfgloader::FromEnv for #name {
             fn load(env_path: &std::path::Path) -> Result<Self, ::cfgloader::CfgError> {
-                // Try to load .env file if it exists, but don't fail if it doesn't
-                let _ = dotenvy::from_path(env_path);
+                // Load .env file if it exists
+                ::cfgloader::load_env_file(env_path)?;
 
                 Ok(Self {
                     #(#inits),*

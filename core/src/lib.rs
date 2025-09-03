@@ -48,6 +48,19 @@ pub fn get_env(key: &'static str) -> Option<String> {
     env::var(key).ok()
 }
 
+/// 給巨集用的小工具：載入 .env 檔案
+pub fn load_env_file(env_path: &std::path::Path) -> Result<(), CfgError> {
+    // Try to load .env file if it exists, but don't fail if it doesn't
+    match dotenvy::from_path(env_path) {
+        Ok(_) => Ok(()),
+        Err(dotenvy::Error::Io(e)) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(e) => Err(CfgError::LoadError {
+            msg: "failed to load .env file",
+            source: Box::new(e),
+        }),
+    }
+}
+
 /// 給巨集用的小工具：解析字串為 T
 pub fn parse_scalar<T: std::str::FromStr>(
     key: &'static str,

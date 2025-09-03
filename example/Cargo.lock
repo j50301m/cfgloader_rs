@@ -6,26 +6,16 @@ version = 4
 name = "cfgloader"
 version = "0.1.0"
 dependencies = [
- "cfgloader-core",
- "cfgloader-macros",
+ "core",
+ "macros",
 ]
 
 [[package]]
-name = "cfgloader-core"
+name = "core"
 version = "0.1.0"
 dependencies = [
  "dotenvy",
  "thiserror",
-]
-
-[[package]]
-name = "cfgloader-macros"
-version = "0.1.0"
-dependencies = [
- "cfgloader-core",
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
@@ -39,7 +29,16 @@ name = "example"
 version = "0.1.0"
 dependencies = [
  "cfgloader",
- "dotenvy",
+]
+
+[[package]]
+name = "macros"
+version = "0.1.0"
+dependencies = [
+ "core",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
