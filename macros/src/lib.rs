@@ -36,8 +36,8 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
         let ident = field.ident.unwrap();
         let ty = field.ty.clone();
 
-        // 預設：沒有 env 標註 → 如果型別也 FromEnv，呼叫其 load()；否則用 Default（若實作）
-        // 若有 #[env(...)] 則依規則填值
+        // Default: no env annotation → if type also implements FromEnv, call its load(); otherwise use Default (if implemented)
+        // If #[env(...)] is present, fill value according to rules
         let mut key_tokens = None::<proc_macro2::TokenStream>;
         let mut default_tokens = None::<proc_macro2::TokenStream>;
         let mut required = false;
@@ -107,7 +107,7 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                 // Vec<T>
                 let split = split_tokens.clone().unwrap_or_else(|| quote! { "," });
                 if required && default_tokens.is_none() {
-                    // 對於 required 且沒有 default 的 Vec 字段
+                    // For required Vec fields without default
                     quote! {
                         #ident: {
                             match ::cfgloader::get_env(#key) {
@@ -136,7 +136,7 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
             } else {
                 // scalar
                 if required && default_tokens.is_none() {
-                    // 對於 required 且沒有 default 的字段，我們需要特殊處理
+                    // For required fields without default, we need special handling
                     quote! {
                         #ident: {
                             match ::cfgloader::get_env(#key) {
@@ -162,7 +162,7 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                 }
             }
         } else {
-            // 無 #[env]：直接呼叫 T::load() 進行巢狀載入
+            // No #[env]: directly call T::load() for nested loading
             quote! {
                 #ident: {
                     #ty::load(env_path)?
@@ -189,7 +189,7 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
     expanded.into()
 }
 
-/// 若是 Vec<T> 回傳 Some(T)，否則 None
+/// Return Some(T) if Vec<T>, otherwise None
 fn element_type(ty: &syn::Type) -> (Option<syn::Type>, bool) {
     if let syn::Type::Path(tp) = ty {
         if let Some(seg) = tp.path.segments.last() {

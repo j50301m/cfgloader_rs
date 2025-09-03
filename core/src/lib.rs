@@ -7,12 +7,12 @@ pub mod fallback {
     where
         T: Default,
     {
-        // 我們需要用一種方法來檢測 T 是否實現了 FromEnv
-        // 由於 Rust 限制，我們使用一個簡單的方法：直接嘗試呼叫 T::load
-        // 如果編譯失敗，則說明 T 沒有實現 FromEnv，我們就用 Default
+        // We need a way to detect if T implements FromEnv
+        // Due to Rust limitations, we use a simple approach: try to call T::load directly
+        // If compilation fails, it means T doesn't implement FromEnv, so we use Default
 
-        // 由於無法在運行時檢測 trait 實現，我們返回 Default
-        // 用戶需要明確使用 #[env(...)] 來加載環境變數
+        // Since we can't detect trait implementation at runtime, we return Default
+        // Users need to explicitly use #[env(...)] to load environment variables
         Ok(T::default())
     }
 }
@@ -43,12 +43,12 @@ pub trait FromEnv: Sized {
     fn load(env_path: &std::path::Path) -> Result<Self, CfgError>;
 }
 
-/// 給巨集用的小工具：讀 env 並回傳 Option<String>
+/// Utility function for macros: read env and return Option<String>
 pub fn get_env(key: &'static str) -> Option<String> {
     env::var(key).ok()
 }
 
-/// 給巨集用的小工具：載入 .env 檔案
+/// Utility function for macros: load .env file
 pub fn load_env_file(env_path: &std::path::Path) -> Result<(), CfgError> {
     // Try to load .env file if it exists, but don't fail if it doesn't
     match dotenvy::from_path(env_path) {
@@ -61,7 +61,7 @@ pub fn load_env_file(env_path: &std::path::Path) -> Result<(), CfgError> {
     }
 }
 
-/// 給巨集用的小工具：解析字串為 T
+/// Utility function for macros: parse string to T
 pub fn parse_scalar<T: std::str::FromStr>(
     key: &'static str,
     raw: String,
@@ -77,7 +77,7 @@ where
     })
 }
 
-/// 分割字串並逐一解析為 Vec<T>
+/// Split string and parse each part to Vec<T>
 pub fn parse_vec<T: std::str::FromStr>(
     key: &'static str,
     raw: String,
