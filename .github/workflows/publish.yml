@@ -1,0 +1,120 @@
+name: Publish to crates.io
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (test only)'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      core-changed: ${{ steps.check-versions.outputs.core-changed }}
+      macros-changed: ${{ steps.check-versions.outputs.macros-changed }}
+      cfgloader-changed: ${{ steps.check-versions.outputs.cfgloader-changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check version changes
+        id: check-versions
+        run: |
+          # Check if any Cargo.toml files changed
+          if git diff HEAD~1 HEAD --name-only | grep -E "Cargo\.toml$"; then
+            echo "Cargo.toml files changed, checking versions..."
+            
+            # Check core version
+            if git diff HEAD~1 HEAD core/Cargo.toml | grep -q "^+version"; then
+              echo "core-changed=true" >> $GITHUB_OUTPUT
+              echo "Core version changed"
+            else
+              echo "core-changed=false" >> $GITHUB_OUTPUT
+            fi
+            
+            # Check macros version
+            if git diff HEAD~1 HEAD macros/Cargo.toml | grep -q "^+version"; then
+              echo "macros-changed=true" >> $GITHUB_OUTPUT
+              echo "Macros version changed"
+            else
+              echo "macros-changed=false" >> $GITHUB_OUTPUT
+            fi
+
+            # Check cfgloader version
+            if git diff HEAD~1 HEAD cfgloader/Cargo.toml | grep -q "^+version"; then
+              echo "cfgloader-changed=true" >> $GITHUB_OUTPUT
+              echo "CFGLoader version changed"
+            else
+              echo "cfgloader-changed=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No Cargo.toml changes detected"
+            echo "core-changed=false" >> $GITHUB_OUTPUT
+            echo "macros-changed=false" >> $GITHUB_OUTPUT
+            echo "cfgloader-changed=false" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: check-version
+    runs-on: ubuntu-latest
+    if: needs.check-version.outputs.core-changed == 'true' || needs.check-version.outputs.macros-changed == 'true' || needs.check-version.outputs.cfgloader-changed == 'true'
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Publish core
+        if: needs.check-version.outputs.core-changed == 'true'
+        run: |
+          cd core
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "DRY RUN: Would publish core"
+            cargo publish --dry-run
+          else
+            cargo publish --token "$CARGO_REGISTRY_TOKEN"
+          fi
+
+      - name: Wait for core publish
+        if: needs.check-version.outputs.core-changed == 'true'
+        run: sleep 30
+
+      - name: Publish macros
+        if: needs.check-version.outputs.macros-changed == 'true'
+        run: |
+          cd macros
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "DRY RUN: Would publish macros"
+            cargo publish --dry-run
+          else
+            cargo publish --token "$CARGO_REGISTRY_TOKEN"
+          fi
+
+      - name: Wait for macros publish
+        if: needs.check-version.outputs.macros-changed == 'true'
+        run: sleep 30
+
+      - name: Publish cfgloader
+        if: needs.check-version.outputs.cfgloader-changed == 'true'
+        run: |
+          cd cfgloader
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "DRY RUN: Would publish cfgloader"
+            cargo publish --dry-run
+          else
+            cargo publish --token "$CARGO_REGISTRY_TOKEN"
+          fi
