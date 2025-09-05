@@ -68,10 +68,11 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                                 if let Some(eq_pos) = default_part.find('=') {
                                     let value_part = default_part[eq_pos + 1..].trim();
                                     if value_part.starts_with('"')
-                                        && let Some(end_quote) = value_part[1..].find('"') {
-                                            let value = &value_part[1..end_quote + 1];
-                                            default_tokens = Some(quote! { #value });
-                                        }
+                                        && let Some(end_quote) = value_part[1..].find('"')
+                                    {
+                                        let value = &value_part[1..end_quote + 1];
+                                        default_tokens = Some(quote! { #value });
+                                    }
                                 }
                             }
 
@@ -86,10 +87,11 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                                 if let Some(eq_pos) = split_part.find('=') {
                                     let value_part = split_part[eq_pos + 1..].trim();
                                     if value_part.starts_with('"')
-                                        && let Some(end_quote) = value_part[1..].find('"') {
-                                            let value = &value_part[1..end_quote + 1];
-                                            split_tokens = Some(quote! { #value });
-                                        }
+                                        && let Some(end_quote) = value_part[1..].find('"')
+                                    {
+                                        let value = &value_part[1..end_quote + 1];
+                                        split_tokens = Some(quote! { #value });
+                                    }
                                 }
                             }
                         }
@@ -193,10 +195,11 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
 fn element_type(ty: &syn::Type) -> (Option<syn::Type>, bool) {
     if let syn::Type::Path(tp) = ty
         && let Some(seg) = tp.path.segments.last()
-            && seg.ident == "Vec"
-                && let syn::PathArguments::AngleBracketed(ab) = &seg.arguments
-                    && let Some(syn::GenericArgument::Type(inner)) = ab.args.first() {
-                        return (Some(inner.clone()), true);
-                    }
+        && seg.ident == "Vec"
+        && let syn::PathArguments::AngleBracketed(ab) = &seg.arguments
+        && let Some(syn::GenericArgument::Type(inner)) = ab.args.first()
+    {
+        return (Some(inner.clone()), true);
+    }
     (None, false)
 }
