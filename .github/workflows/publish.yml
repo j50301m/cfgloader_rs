@@ -2,8 +2,8 @@ name: Publish to crates.io
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.0.0
   workflow_dispatch:
     inputs:
       publish:
@@ -13,46 +13,8 @@ on:
         type: boolean
 
 jobs:
-  check-version:
-    runs-on: ubuntu-latest
-    outputs:
-      version-changed: ${{ steps.check-versions.outputs.version-changed }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Check version changes
-        id: check-versions
-        run: |
-          # For manual dispatch, we can force check all crates
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "Manual trigger detected"
-            echo "version-changed=true" >> $GITHUB_OUTPUT
-            echo "Manual dispatch: will publish all crates"
-          else
-            # Check if workspace version changed in root Cargo.toml
-            if git diff HEAD~1 HEAD --name-only | grep -q "^Cargo\.toml$"; then
-              echo "Root Cargo.toml changed, checking workspace version..."
-              
-              if git diff HEAD~1 HEAD Cargo.toml | grep -q "^+.*version.*="; then
-                echo "Workspace version changed - will publish all crates"
-                echo "version-changed=true" >> $GITHUB_OUTPUT
-              else
-                echo "No workspace version change detected"
-                echo "version-changed=false" >> $GITHUB_OUTPUT
-              fi
-            else
-              echo "No workspace Cargo.toml changes detected"
-              echo "version-changed=false" >> $GITHUB_OUTPUT
-            fi
-          fi
-
   publish:
-    needs: check-version
     runs-on: ubuntu-latest
-    if: needs.check-version.outputs.version-changed == 'true'
     env:
       CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
     steps:
@@ -62,41 +24,94 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Get tag name
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "TRIGGERED_BY_TAG=true" >> $GITHUB_OUTPUT
+          else
+            echo "TRIGGERED_BY_TAG=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Show publish mode
+        run: |
+          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ]; then
+            echo "🚀 Publishing triggered by tag: ${{ steps.tag.outputs.TAG_NAME }}"
+            echo "📦 Will publish all crates to crates.io"
+          elif [ "${{ github.event.inputs.publish }}" == "true" ]; then
+            echo "🚀 Manual publish triggered"
+            echo "📦 Will publish all crates to crates.io"
+          else
+            echo "🧪 Dry run mode"
+            echo "📋 Will only validate packages without publishing"
+          fi
+
       - name: Publish core
         run: |
           cd core
-          if [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "PUBLISHING: cfgloader-core to crates.io"
+          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ] || [ "${{ github.event.inputs.publish }}" == "true" ]; then
+            echo "🚀 PUBLISHING: cfgloader-core to crates.io"
             cargo publish --token "$CARGO_REGISTRY_TOKEN"
           else
-            echo "DRY RUN: Would publish cfgloader-core"
+            echo "🧪 DRY RUN: Would publish cfgloader-core"
             cargo publish --dry-run
           fi
 
       - name: Wait for core publish
+        if: steps.tag.outputs.TRIGGERED_BY_TAG == 'true' || github.event.inputs.publish == 'true'
         run: sleep 30
 
       - name: Publish macros
         run: |
           cd macros
-          if [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "PUBLISHING: cfgloader_rs_macros to crates.io"
+          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ] || [ "${{ github.event.inputs.publish }}" == "true" ]; then
+            echo "🚀 PUBLISHING: cfgloader_rs_macros to crates.io"
             cargo publish --token "$CARGO_REGISTRY_TOKEN"
           else
-            echo "DRY RUN: Would publish cfgloader_rs_macros"
+            echo "🧪 DRY RUN: Would publish cfgloader_rs_macros"
             cargo publish --dry-run
           fi
 
       - name: Wait for macros publish
+        if: steps.tag.outputs.TRIGGERED_BY_TAG == 'true' || github.event.inputs.publish == 'true'
         run: sleep 30
 
       - name: Publish cfgloader
         run: |
           cd cfgloader
-          if [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "PUBLISHING: cfgloader_rs to crates.io"
+          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ] || [ "${{ github.event.inputs.publish }}" == "true" ]; then
+            echo "🚀 PUBLISHING: cfgloader_rs to crates.io"
             cargo publish --token "$CARGO_REGISTRY_TOKEN"
           else
-            echo "DRY RUN: Would publish cfgloader_rs"
+            echo "🧪 DRY RUN: Would publish cfgloader_rs"
             cargo publish --dry-run
           fi
+
+      - name: Create GitHub Release
+        if: steps.tag.outputs.TRIGGERED_BY_TAG == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
+          release_name: Release ${{ steps.tag.outputs.TAG_NAME }}
+          body: |
+            🎉 CFGLoader ${{ steps.tag.outputs.TAG_NAME }} Released!
+            
+            ## 📦 Published Crates
+            - `cfgloader-core` v${{ steps.tag.outputs.TAG_NAME }}
+            - `cfgloader_rs_macros` v${{ steps.tag.outputs.TAG_NAME }}
+            - `cfgloader_rs` v${{ steps.tag.outputs.TAG_NAME }}
+            
+            ## 📚 Documentation
+            - [docs.rs/cfgloader_rs](https://docs.rs/cfgloader_rs)
+            - [crates.io/crates/cfgloader_rs](https://crates.io/crates/cfgloader_rs)
+            
+            ## 🚀 Usage
+            ```toml
+            [dependencies]
+            cfgloader_rs = "${{ steps.tag.outputs.TAG_NAME }}"
+            ```
+          draft: false
+          prerelease: false

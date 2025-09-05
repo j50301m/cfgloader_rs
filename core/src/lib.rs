@@ -36,7 +36,11 @@ impl std::fmt::Display for CfgError {
         match self {
             CfgError::MissingEnv(key) => write!(f, "missing required env: {}", key),
             CfgError::ParseError { key, value, ty, .. } => {
-                write!(f, "failed to parse env {} value `{}` into {}", key, value, ty)
+                write!(
+                    f,
+                    "failed to parse env {} value `{}` into {}",
+                    key, value, ty
+                )
             }
             CfgError::LoadError { msg, .. } => write!(f, "failed to load env: {}", msg),
         }
