@@ -6,6 +6,9 @@ on:
       - 'v*.*.*'  # Trigger on version tags like v1.0.0
   workflow_dispatch:
 
+permissions:
+  contents: write  # Required for creating releases
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -18,11 +21,14 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Get tag name
+      - name: Get tag name and version
         id: tag
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
-            echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            VERSION=${TAG_NAME#v}  # Remove 'v' prefix for crate version
+            echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
             echo "TRIGGERED_BY_TAG=true" >> $GITHUB_OUTPUT
           else
             echo "TRIGGERED_BY_TAG=false" >> $GITHUB_OUTPUT
@@ -93,19 +99,17 @@ jobs:
 
       - name: Create GitHub Release
         if: steps.tag.outputs.TRIGGERED_BY_TAG == 'true'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          release_name: Release ${{ steps.tag.outputs.TAG_NAME }}
+          name: Release ${{ steps.tag.outputs.TAG_NAME }}
           body: |
             🎉 CFGLoader ${{ steps.tag.outputs.TAG_NAME }} Released!
             
             ## 📦 Published Crates
-            - `cfgloader-core` v${{ steps.tag.outputs.TAG_NAME }}
-            - `cfgloader_rs_macros` v${{ steps.tag.outputs.TAG_NAME }}
-            - `cfgloader_rs` v${{ steps.tag.outputs.TAG_NAME }}
+            - `cfgloader-core` v${{ steps.tag.outputs.VERSION }}
+            - `cfgloader_rs_macros` v${{ steps.tag.outputs.VERSION }}
+            - `cfgloader_rs` v${{ steps.tag.outputs.VERSION }}
             
             ## 📚 Documentation
             - [docs.rs/cfgloader_rs](https://docs.rs/cfgloader_rs)
@@ -114,7 +118,7 @@ jobs:
             ## 🚀 Usage
             ```toml
             [dependencies]
-            cfgloader_rs = "${{ steps.tag.outputs.TAG_NAME }}"
+            cfgloader_rs = "${{ steps.tag.outputs.VERSION }}"
             ```
           draft: false
           prerelease: false
