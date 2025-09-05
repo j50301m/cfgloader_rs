@@ -10,7 +10,7 @@ exclude = [
 ]
 
 [workspace.package]
-version = "0.1.2"
+version = "1.0.0"
 authors = ["j50301m <j50301m@yahoo.com.tw>"]
 edition = "2024"
 license = "MIT OR Apache-2.0"

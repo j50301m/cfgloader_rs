@@ -23,7 +23,7 @@ Add `cfgloader_rs` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-cfgloader_rs = "0.1"
+cfgloader_rs = "1.0"
 ```
 
 ### Basic Usage
