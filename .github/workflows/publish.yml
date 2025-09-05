@@ -5,12 +5,6 @@ on:
     tags:
       - 'v*.*.*'  # Trigger on version tags like v1.0.0
   workflow_dispatch:
-    inputs:
-      publish:
-        description: 'Publish to crates.io (false = dry-run only)'
-        required: false
-        default: false
-        type: boolean
 
 jobs:
   publish:
@@ -36,56 +30,65 @@ jobs:
 
       - name: Show publish mode
         run: |
-          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ]; then
+          if [ "${{ github.event_name }}" == "push" ]; then
             echo "🚀 Publishing triggered by tag: ${{ steps.tag.outputs.TAG_NAME }}"
-            echo "📦 Will publish all crates to crates.io"
-          elif [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "🚀 Manual publish triggered"
-            echo "📦 Will publish all crates to crates.io"
           else
-            echo "🧪 Dry run mode"
-            echo "📋 Will only validate packages without publishing"
+            echo "🚀 Manual publish triggered"
           fi
+          echo "📦 Will publish all crates to crates.io"
 
       - name: Publish core
         run: |
           cd core
-          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ] || [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "🚀 PUBLISHING: cfgloader-core to crates.io"
-            cargo publish --token "$CARGO_REGISTRY_TOKEN"
+          echo "🚀 PUBLISHING: cfgloader-core to crates.io"
+          if ! cargo publish --token "$CARGO_REGISTRY_TOKEN" 2>&1 | tee publish_output.log; then
+            if grep -q "crate version .* is already uploaded" publish_output.log; then
+              echo "⚠️  Crate cfgloader-core already exists, continuing..."
+            else
+              echo "❌ Unexpected error publishing cfgloader-core"
+              cat publish_output.log
+              exit 1
+            fi
           else
-            echo "🧪 DRY RUN: Would publish cfgloader-core"
-            cargo publish --dry-run
+            echo "✅ Successfully published cfgloader-core"
           fi
 
       - name: Wait for core publish
-        if: steps.tag.outputs.TRIGGERED_BY_TAG == 'true' || github.event.inputs.publish == 'true'
         run: sleep 30
 
       - name: Publish macros
         run: |
           cd macros
-          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ] || [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "🚀 PUBLISHING: cfgloader_rs_macros to crates.io"
-            cargo publish --token "$CARGO_REGISTRY_TOKEN"
+          echo "🚀 PUBLISHING: cfgloader_rs_macros to crates.io"
+          if ! cargo publish --token "$CARGO_REGISTRY_TOKEN" 2>&1 | tee publish_output.log; then
+            if grep -q "crate version .* is already uploaded" publish_output.log; then
+              echo "⚠️  Crate cfgloader_rs_macros already exists, continuing..."
+            else
+              echo "❌ Unexpected error publishing cfgloader_rs_macros"
+              cat publish_output.log
+              exit 1
+            fi
           else
-            echo "🧪 DRY RUN: Would publish cfgloader_rs_macros"
-            cargo publish --dry-run
+            echo "✅ Successfully published cfgloader_rs_macros"
           fi
 
       - name: Wait for macros publish
-        if: steps.tag.outputs.TRIGGERED_BY_TAG == 'true' || github.event.inputs.publish == 'true'
         run: sleep 30
 
       - name: Publish cfgloader
         run: |
           cd cfgloader
-          if [ "${{ steps.tag.outputs.TRIGGERED_BY_TAG }}" == "true" ] || [ "${{ github.event.inputs.publish }}" == "true" ]; then
-            echo "🚀 PUBLISHING: cfgloader_rs to crates.io"
-            cargo publish --token "$CARGO_REGISTRY_TOKEN"
+          echo "🚀 PUBLISHING: cfgloader_rs to crates.io"
+          if ! cargo publish --token "$CARGO_REGISTRY_TOKEN" 2>&1 | tee publish_output.log; then
+            if grep -q "crate version .* is already uploaded" publish_output.log; then
+              echo "⚠️  Crate cfgloader_rs already exists, continuing..."
+            else
+              echo "❌ Unexpected error publishing cfgloader_rs"
+              cat publish_output.log
+              exit 1
+            fi
           else
-            echo "🧪 DRY RUN: Would publish cfgloader_rs"
-            cargo publish --dry-run
+            echo "✅ Successfully published cfgloader_rs"
           fi
 
       - name: Create GitHub Release
