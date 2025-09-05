@@ -1,4 +1,4 @@
-# CFGLoader RS
+# Config loader for Rust
 
 [![Crates.io](https://img.shields.io/crates/v/cfgloader_rs.svg)](https://crates.io/crates/cfgloader_rs)
 [![Documentation](https://docs.rs/cfgloader_rs/badge.svg)](https://docs.rs/cfgloader_rs)
