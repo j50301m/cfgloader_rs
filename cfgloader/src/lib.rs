@@ -11,7 +11,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! cfgloader_rs = "0.1"
+//! cfgloader-rs = "0.1"
 //! ```
 //!
 //! ## Quick Start

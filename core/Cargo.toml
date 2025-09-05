@@ -9,8 +9,7 @@ categories = ["config", "development-tools"]
 license.workspace = true
 repository.workspace = true
 documentation = "https://docs.rs/cfgloader-rs-core"
-readme = "../README.md"
+readme = "README.md"
 
 [dependencies]
 dotenvy = "0.15"
-thiserror = "2"

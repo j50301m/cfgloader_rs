@@ -1,8 +1,8 @@
 # CFGLoader RS 🚀
 
-[![Crates.io](https://img.shields.io/crates/v/cfgloader_rs.svg)](https://crates.io/crates/cfgloader_rs)
-[![Documentation](https://docs.rs/cfgloader_rs/badge.svg)](https://docs.rs/cfgloader_rs)
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/j50301m/cfgloader_rs#license)
+[![Crates.io](https://img.shields.io/crates/v/cfgloader-rs.svg)](https://crates.io/crates/cfgloader-rs)
+[![Documentation](https://docs.rs/cfgloader-rs/badge.svg)](https://docs.rs/cfgloader-rs)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/j50301m/cfgloader-rs#license)
 
 A simple, powerful, and ergonomic configuration loading library for Rust applications. CFGLoader automatically loads configuration from environment variables and `.env` files with compile-time validation and type safety.
 
@@ -15,7 +15,7 @@ A simple, powerful, and ergonomic configuration loading library for Rust applica
 - **📊 Array Support**: Parse comma-separated values into `Vec<T>`
 - **🔗 Nested Configs**: Organize configuration into logical groups
 - **🛡️ Error Handling**: Descriptive error messages for missing or invalid values
-- **🚀 Zero Dependencies**: Minimal dependency footprint (only `dotenvy` and `thiserror`)
+- **🚀 Minimal Dependencies**: Only depends on `dotenvy` for .env file support
 
 ## 🚀 Quick Start
 
@@ -23,7 +23,7 @@ Add CFGLoader to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-cfgloader_rs = "0.1"
+cfgloader-rs = "0.1"
 ```
 
 ### Basic Usage
@@ -250,9 +250,9 @@ fn main() {
 
 CFGLoader consists of three main crates:
 
-- **`cfgloader`**: Main crate that re-exports everything you need
-- **`cfgloader-core`**: Core functionality and error types
-- **`cfgloader-macros`**: Procedural macros for `FromEnv` derive
+- **`cfgloader-rs`**: Main crate that re-exports everything you need
+- **`cfgloader-rs-core`**: Core functionality and error types
+- **`cfgloader-rs-macros`**: Procedural macros for `FromEnv` derive
 
 ## 📝 License
 
@@ -276,4 +276,4 @@ cd example
 cargo run
 ```
 
-For detailed API documentation, visit [docs.rs/cfgloader_rs](https://docs.rs/cfgloader_rs).
+For detailed API documentation, visit [docs.rs/cfgloader-rs](https://docs.rs/cfgloader-rs).

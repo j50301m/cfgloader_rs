@@ -1,5 +1,4 @@
 use std::env;
-use thiserror::Error;
 
 #[doc(hidden)]
 pub mod fallback {
@@ -17,26 +16,41 @@ pub mod fallback {
     }
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum CfgError {
-    #[error("missing required env: {0}")]
     MissingEnv(&'static str),
-
-    #[error("failed to parse env {key} value `{value}` into {ty}: {source}")]
     ParseError {
         key: &'static str,
         value: String,
         ty: &'static str,
-        #[source]
         source: Box<dyn std::error::Error + Send + Sync>,
     },
-
-    #[error("failed to load env: {msg}: {source}")]
     LoadError {
         msg: &'static str,
-        #[source]
         source: Box<dyn std::error::Error + Send + Sync>,
     },
+}
+
+impl std::fmt::Display for CfgError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CfgError::MissingEnv(key) => write!(f, "missing required env: {}", key),
+            CfgError::ParseError { key, value, ty, .. } => {
+                write!(f, "failed to parse env {} value `{}` into {}", key, value, ty)
+            }
+            CfgError::LoadError { msg, .. } => write!(f, "failed to load env: {}", msg),
+        }
+    }
+}
+
+impl std::error::Error for CfgError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            CfgError::MissingEnv(_) => None,
+            CfgError::ParseError { source, .. } => Some(source.as_ref()),
+            CfgError::LoadError { source, .. } => Some(source.as_ref()),
+        }
+    }
 }
 
 pub trait FromEnv: Sized {

@@ -9,7 +9,7 @@ categories = ["config", "development-tools"]
 license.workspace = true
 repository.workspace = true
 documentation = "https://docs.rs/cfgloader-rs-macros"
-readme = "../README.md"
+readme = "README.md"
 
 [lib]
 proc-macro = true
