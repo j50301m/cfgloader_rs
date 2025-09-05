@@ -1,8 +1,8 @@
-# cfgloader-rs-core
+# cfgloader-core
 
 > Core functionality for CFGLoader
 
-This crate provides the core types, traits, and utilities for the CFGLoader configuration loading library. It is typically not used directly - instead, use the main [`cfgloader-rs`](https://crates.io/crates/cfgloader-rs) crate which re-exports everything you need.
+This crate provides the core types, traits, and utilities for the CFGLoader configuration loading library. It is typically not used directly - instead, use the main [`cfgloader_rs`](https://crates.io/crates/cfgloader_rs) crate which re-exports everything you need.
 
 ## What's in this crate
 
@@ -13,7 +13,7 @@ This crate provides the core types, traits, and utilities for the CFGLoader conf
 
 ## Usage
 
-This is an internal crate. For usage examples and documentation, please see the main [`cfgloader-rs`](https://crates.io/crates/cfgloader-rs) crate.
+This is an internal crate. For usage examples and documentation, please see the main [`cfgloader_rs`](https://crates.io/crates/cfgloader_rs) crate.
 
 ## License
 

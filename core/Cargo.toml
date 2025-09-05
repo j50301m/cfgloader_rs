@@ -1,5 +1,5 @@
 [package]
-name = "cfgloader-rs-core"
+name = "cfgloader-core"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,7 +8,7 @@ keywords = ["config", "environment", "dotenv", "configuration", "env"]
 categories = ["config", "development-tools"]
 license.workspace = true
 repository.workspace = true
-documentation = "https://docs.rs/cfgloader-rs-core"
+documentation = "https://docs.rs/cfgloader-core"
 readme = "README.md"
 
 [dependencies]

@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-cfgloader-rs = { path = "../cfgloader" }
+cfgloader_rs = { path = "../cfgloader" }
 
 [[bin]]
 name = "example"

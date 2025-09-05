@@ -3,25 +3,25 @@
 version = 4
 
 [[package]]
-name = "cfgloader-rs"
-version = "0.1.2"
-dependencies = [
- "cfgloader-rs-core",
- "cfgloader-rs-macros",
-]
-
-[[package]]
-name = "cfgloader-rs-core"
+name = "cfgloader-core"
 version = "0.1.2"
 dependencies = [
  "dotenvy",
 ]
 
 [[package]]
-name = "cfgloader-rs-macros"
+name = "cfgloader_rs"
 version = "0.1.2"
 dependencies = [
- "cfgloader-rs-core",
+ "cfgloader-core",
+ "cfgloader_rs_macros",
+]
+
+[[package]]
+name = "cfgloader_rs_macros"
+version = "0.1.2"
+dependencies = [
+ "cfgloader-core",
  "proc-macro2",
  "quote",
  "syn",

@@ -1,8 +1,8 @@
 # CFGLoader RS
 
-[![Crates.io](https://img.shields.io/crates/v/cfgloader-rs.svg)](https://crates.io/crates/cfgloader-rs)
-[![Documentation](https://docs.rs/cfgloader-rs/badge.svg)](https://docs.rs/cfgloader-rs)
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/j50301m/cfgloader-rs#license)
+[![Crates.io](https://img.shields.io/crates/v/cfgloader_rs.svg)](https://crates.io/crates/cfgloader_rs)
+[![Documentation](https://docs.rs/cfgloader_rs/badge.svg)](https://docs.rs/cfgloader_rs)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/j50301m/cfgloader_rs#license)
 
 A simple, powerful, and ergonomic configuration loading library for Rust applications. CFGLoader automatically loads configuration from environment variables and `.env` files with compile-time validation and type safety.
 
@@ -19,11 +19,11 @@ A wrapper around `dotenvy` that provides the `FromEnv` derive macro and utilitie
 
 ## 🚀 Quick Start
 
-Add `cfgloader-rs` to your `Cargo.toml`:
+Add `cfgloader_rs` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-cfgloader-rs = "0.1"
+cfgloader_rs = "0.1"
 ```
 
 ### Basic Usage
@@ -205,9 +205,9 @@ fn main() {
 
 CFGLoader consists of three main crates:
 
-- **`cfgloader-rs`**: Main crate that re-exports everything you need
-- **`cfgloader-rs-core`**: Core functionality and error types
-- **`cfgloader-rs-macros`**: Procedural macros for `FromEnv` derive
+- **`cfgloader_rs`**: Main crate that re-exports everything you need
+- **`cfgloader-core`**: Core functionality and error types
+- **`cfgloader_rs_macros`**: Procedural macros for `FromEnv` derive
 
 ## 📄 License
 
@@ -224,11 +224,11 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 
 ## 🎯 Getting Started
 
-Check out the [example](https://github.com/j50301m/cfgloader-rs/tree/main/example) directory for a complete working example, or run:
+Check out the [example](https://github.com/j50301m/cfgloader_rs/tree/main/example) directory for a complete working example, or run:
 
 ```bash
 cd example
 cargo run
 ```
 
-For detailed API documentation, visit [docs.rs/cfgloader-rs](https://docs.rs/cfgloader-rs).
+For detailed API documentation, visit [docs.rs/cfgloader_rs](https://docs.rs/cfgloader_rs).

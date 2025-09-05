@@ -11,7 +11,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! cfgloader-rs = "0.1"
+//! cfgloader_rs = "0.1"
 //! ```
 //!
 //! ## Quick Start
@@ -90,7 +90,7 @@
 //! ```
 
 // Re-export all core functionality
-pub use cfgloader_rs_core::*;
+pub use cfgloader_core::*;
 
 // Re-export derive macro when derive feature is enabled
 #[cfg(feature = "derive")]

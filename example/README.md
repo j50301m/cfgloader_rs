@@ -1,6 +1,6 @@
 # CFGLoader Example
 
-This example demonstrates how to use the `cfgloader-rs` library to load configuration from environment variables and `.env` files.
+This example demonstrates how to use the `cfgloader_rs` library to load configuration from environment variables and `.env` files.
 
 ## Running the Example
 
@@ -57,4 +57,4 @@ export FEATURES="auth,cache,monitoring"
 cargo run
 ```
 
-For more information, see the main [cfgloader-rs documentation](https://docs.rs/cfgloader-rs).
+For more information, see the main [cfgloader_rs documentation](https://docs.rs/cfgloader_rs).

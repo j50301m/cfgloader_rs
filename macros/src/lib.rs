@@ -112,24 +112,24 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                     // For required Vec fields without default
                     quote! {
                         #ident: {
-                            match ::cfgloader_rs::get_env(#key) {
-                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_rs::parse_vec::<#ty_item>(#key, raw.clone(), #split)?,
-                                _ => return Err(::cfgloader_rs::CfgError::MissingEnv(#key))
+                            match ::cfgloader_core::get_env(#key) {
+                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_core::parse_vec::<#ty_item>(#key, raw.clone(), #split)?,
+                                _ => return Err(::cfgloader_core::CfgError::MissingEnv(#key))
                             }
                         }
                     }
                 } else {
                     let default_branch = if let Some(def) = default_tokens.clone() {
                         quote! {
-                            ::cfgloader_rs::parse_vec::<#ty_item>(#key, #def.to_string(), #split)?
+                            ::cfgloader_core::parse_vec::<#ty_item>(#key, #def.to_string(), #split)?
                         }
                     } else {
                         quote! { Vec::<#ty_item>::new() }
                     };
                     quote! {
                         #ident: {
-                            match ::cfgloader_rs::get_env(#key) {
-                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_rs::parse_vec::<#ty_item>(#key, raw.clone(), #split)?,
+                            match ::cfgloader_core::get_env(#key) {
+                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_core::parse_vec::<#ty_item>(#key, raw.clone(), #split)?,
                                 _ => #default_branch
                             }
                         }
@@ -141,22 +141,22 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                     // For required fields without default, we need special handling
                     quote! {
                         #ident: {
-                            match ::cfgloader_rs::get_env(#key) {
-                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_rs::parse_scalar::<#ty>(#key, raw.clone())?,
-                                _ => return Err(::cfgloader_rs::CfgError::MissingEnv(#key))
+                            match ::cfgloader_core::get_env(#key) {
+                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_core::parse_scalar::<#ty>(#key, raw.clone())?,
+                                _ => return Err(::cfgloader_core::CfgError::MissingEnv(#key))
                             }
                         }
                     }
                 } else {
                     let default_branch = if let Some(def) = default_tokens.clone() {
-                        quote! { ::cfgloader_rs::parse_scalar::<#ty>(#key, #def.to_string())? }
+                        quote! { ::cfgloader_core::parse_scalar::<#ty>(#key, #def.to_string())? }
                     } else {
                         quote! { Default::default() }
                     };
                     quote! {
                         #ident: {
-                            match ::cfgloader_rs::get_env(#key) {
-                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_rs::parse_scalar::<#ty>(#key, raw.clone())?,
+                            match ::cfgloader_core::get_env(#key) {
+                                Some(ref raw) if !raw.trim().is_empty() => ::cfgloader_core::parse_scalar::<#ty>(#key, raw.clone())?,
                                 _ => #default_branch
                             }
                         }
@@ -176,10 +176,10 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
     }
 
     let expanded = quote! {
-        impl ::cfgloader_rs::FromEnv for #name {
-            fn load(env_path: &std::path::Path) -> Result<Self, ::cfgloader_rs::CfgError> {
+        impl ::cfgloader_core::FromEnv for #name {
+            fn load(env_path: &std::path::Path) -> Result<Self, ::cfgloader_core::CfgError> {
                 // Load .env file if it exists
-                ::cfgloader_rs::load_env_file(env_path)?;
+                ::cfgloader_core::load_env_file(env_path)?;
 
                 Ok(Self {
                     #(#inits),*
