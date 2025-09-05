@@ -269,7 +269,7 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 
 ## 🚀 Getting Started
 
-Check out the [example](example/) directory for a complete working example, or run:
+Check out the [example](https://github.com/j50301m/cfgloader-rs/tree/main/example) directory for a complete working example, or run:
 
 ```bash
 cd example

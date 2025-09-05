@@ -90,7 +90,7 @@
 //! ```
 
 // Re-export all core functionality
-pub use cfgloader_core::*;
+pub use cfgloader_rs_core::*;
 
 // Re-export derive macro when derive feature is enabled
 #[cfg(feature = "derive")]

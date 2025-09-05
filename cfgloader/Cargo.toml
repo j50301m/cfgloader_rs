@@ -1,5 +1,5 @@
 [package]
-name = "cfgloader_rs"
+name = "cfgloader-rs"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,7 +8,7 @@ keywords = ["config", "environment", "dotenv", "configuration", "env"]
 categories = ["config", "development-tools"]
 license.workspace = true
 repository.workspace = true
-documentation = "https://docs.rs/cfgloader_rs"
+documentation = "https://docs.rs/cfgloader-rs"
 readme = "../README.md"
 exclude = [
     "tests/*",
@@ -17,10 +17,10 @@ exclude = [
 
 [features]
 default = ["derive"]
-derive = ["cfgloader_rs_macros"]
+derive = ["cfgloader-rs-macros"]
 
 [dependencies]
-cfgloader-core = { version = "0.1.0", path = "../core" }
+cfgloader-rs-core = { version = "0.1.2", path = "../core" }
 
 # Optional dependency on the derive macro
-cfgloader_rs_macros = { version = "0.1.0", path = "../macros", optional = true }
+cfgloader-rs-macros = { version = "0.1.2", path = "../macros", optional = true }

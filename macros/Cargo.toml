@@ -1,5 +1,5 @@
 [package]
-name = "cfgloader_rs_macros"
+name = "cfgloader-rs-macros"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,14 +8,14 @@ keywords = ["config", "environment", "dotenv", "configuration", "macro"]
 categories = ["config", "development-tools"]
 license.workspace = true
 repository.workspace = true
-documentation = "https://docs.rs/cfgloader_rs_macros"
+documentation = "https://docs.rs/cfgloader-rs-macros"
 readme = "../README.md"
 
 [lib]
 proc-macro = true
 
 [dependencies]
-cfgloader-core = { version = "0.1.0", path = "../core" }
+cfgloader-rs-core = { version = "0.1.2", path = "../core" }
 proc-macro2 = "1"
 syn = { version = "2", features = ["full", "extra-traits"] }
 quote = "1"
