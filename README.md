@@ -1,4 +1,4 @@
-# CFGLoader RS 🚀
+# CFGLoader RS
 
 [![Crates.io](https://img.shields.io/crates/v/cfgloader-rs.svg)](https://crates.io/crates/cfgloader-rs)
 [![Documentation](https://docs.rs/cfgloader-rs/badge.svg)](https://docs.rs/cfgloader-rs)
@@ -8,18 +8,18 @@ A simple, powerful, and ergonomic configuration loading library for Rust applica
 
 ## ✨ Features
 
-- **🔧 Simple Setup**: Just derive `FromEnv` on your structs
-- **🏗️ Type Safe**: Compile-time validation and automatic type conversion
-- **📁 .env Support**: Automatic loading from `.env` files with `dotenvy` integration
-- **🎯 Flexible**: Support for required fields, defaults, and custom parsing
-- **📊 Array Support**: Parse comma-separated values into `Vec<T>`
-- **🔗 Nested Configs**: Organize configuration into logical groups
-- **🛡️ Error Handling**: Descriptive error messages for missing or invalid values
-- **🚀 Minimal Dependencies**: Only depends on `dotenvy` for .env file support
+A wrapper around `dotenvy` that provides the `FromEnv` derive macro and utilities to simplify the complexity of reading environment variables.
+
+- Simple derive macro for automatic configuration loading
+- Type-safe parsing with compile-time validation  
+- Built-in support for required fields, defaults, and custom parsing
+- Array support with configurable separators
+- Nested configuration structures
+- Descriptive error handling
 
 ## 🚀 Quick Start
 
-Add CFGLoader to your `Cargo.toml`:
+Add `cfgloader-rs` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
@@ -137,60 +137,15 @@ struct Config {
 }
 ```
 
-## 📖 Attribute Reference
+## 🔧 Attribute Reference
 
-### `#[env("ENV_VAR_NAME")]`
+- `#[env("ENV_VAR_NAME")]` - Load value from the specified environment variable
+- `#[env("ENV_VAR_NAME", default = "value")]` - Provide a default value if the environment variable is not set
+- `#[env("ENV_VAR_NAME", required)]` - Mark a field as required. The application will fail to start if this environment variable is not provided
+- `#[env("ENV_VAR_NAME", split = "separator")]` - Parse the environment variable as a delimited string and convert to `Vec<T>`
+- Nested Structs - Fields without `#[env]` attributes are treated as nested configuration structs
 
-Load value from the specified environment variable.
-
-```rust
-#[env("PORT")]
-port: u16,
-```
-
-### `#[env("ENV_VAR_NAME", default = "value")]`
-
-Provide a default value if the environment variable is not set.
-
-```rust
-#[env("HOST", default = "127.0.0.1")]
-host: String,
-```
-
-### `#[env("ENV_VAR_NAME", required)]`
-
-Mark a field as required. The application will fail to start if this environment variable is not provided.
-
-```rust
-#[env("API_KEY", required)]
-api_key: String,
-```
-
-### `#[env("ENV_VAR_NAME", split = "separator")]`
-
-Parse the environment variable as a delimited string and convert to `Vec<T>`.
-
-```rust
-#[env("FEATURES", default = "auth,logging", split = ",")]
-features: Vec<String>,
-```
-
-### Nested Structs
-
-Fields without `#[env]` attributes are treated as nested configuration structs:
-
-```rust
-#[derive(FromEnv)]
-struct Config {
-    #[env("APP_NAME")]
-    name: String,
-    
-    // This will call DatabaseConfig::load()
-    database: DatabaseConfig,
-}
-```
-
-## 🎯 Supported Types
+## 🔤 Supported Types
 
 CFGLoader supports any type that implements `FromStr`:
 
@@ -219,7 +174,7 @@ struct Config {
 }
 ```
 
-## 🔧 Error Handling
+## ⚠️ Error Handling
 
 CFGLoader provides descriptive error messages:
 
@@ -254,7 +209,7 @@ CFGLoader consists of three main crates:
 - **`cfgloader-rs-core`**: Core functionality and error types
 - **`cfgloader-rs-macros`**: Procedural macros for `FromEnv` derive
 
-## 📝 License
+## 📄 License
 
 Licensed under either of
 
@@ -267,7 +222,7 @@ at your option.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
 
-## 🚀 Getting Started
+## 🎯 Getting Started
 
 Check out the [example](https://github.com/j50301m/cfgloader-rs/tree/main/example) directory for a complete working example, or run:
 
