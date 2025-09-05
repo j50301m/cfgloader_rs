@@ -15,7 +15,7 @@ readme = "README.md"
 proc-macro = true
 
 [dependencies]
-cfgloader-core = {path = "../core" }
+cfgloader-core = { version = "1.0.0", path = "../core" }
 proc-macro2 = "1"
 syn = { version = "2", features = ["full", "extra-traits"] }
 quote = "1"
