@@ -59,6 +59,10 @@ impl std::error::Error for CfgError {
 
 pub trait FromEnv: Sized {
     fn load(env_path: &std::path::Path) -> Result<Self, CfgError>;
+    fn load_iter<I, P>(paths: I) -> Result<Self, CfgError>
+    where
+        I: IntoIterator<Item = P>,
+        P: AsRef<std::path::Path>;
 }
 
 /// Utility function for macros: read env and return `Option<String>`
@@ -77,6 +81,29 @@ pub fn load_env_file(env_path: &std::path::Path) -> Result<(), CfgError> {
             source: Box::new(e),
         }),
     }
+}
+
+/// Load .env from multiple paths (any iterable), return on first success.
+/// If none found, return error.
+pub fn load_env_file_iter<I, P>(paths: I) -> Result<(), CfgError>
+where
+    I: IntoIterator<Item = P>,
+    P: AsRef<std::path::Path>,
+{
+    let mut last_err = None;
+    for path in paths {
+        match load_env_file(path.as_ref()) {
+            Ok(_) => return Ok(()),
+            Err(e) => last_err = Some(e),
+        }
+    }
+    Err(last_err.unwrap_or_else(|| CfgError::LoadError {
+        msg: "no .env file found in any provided path",
+        source: Box::new(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "not found",
+        )),
+    }))
 }
 
 /// Utility function for macros: parse string to T

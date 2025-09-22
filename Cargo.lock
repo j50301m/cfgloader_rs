@@ -4,14 +4,14 @@ version = 4
 
 [[package]]
 name = "cfgloader-core"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "dotenvy",
 ]
 
 [[package]]
 name = "cfgloader_rs"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "cfgloader-core",
  "cfgloader_rs_macros",
@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "cfgloader_rs_macros"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "cfgloader-core",
  "proc-macro2",

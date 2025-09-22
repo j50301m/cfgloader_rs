@@ -11,7 +11,7 @@ A simple, powerful, and ergonomic configuration loading library for Rust applica
 A wrapper around `dotenvy` that provides the `FromEnv` derive macro and utilities to simplify the complexity of reading environment variables.
 
 - Simple derive macro for automatic configuration loading
-- Type-safe parsing with compile-time validation  
+- Type-safe parsing with compile-time validation
 - Built-in support for required fields, defaults, and custom parsing
 - Array support with configurable separators
 - Nested configuration structures
@@ -35,25 +35,54 @@ use cfgloader_rs::*;
 struct Config {
     #[env("DATABASE_URL", default = "sqlite://app.db")]
     database_url: String,
-    
+
     #[env("PORT", default = "8080")]
     port: u16,
-    
+
     #[env("API_KEY", required)]
     api_key: String,
-    
+
     #[env("FEATURES", default = "auth,logging", split = ",")]
     features: Vec<String>,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // One path
     let config = Config::load(std::path::Path::new(".env"))?;
+    // Or multiple paths
+    let config2 = Config::load_iter(vec![std::path::Path::new(".env"),std::path::Path::new(".env.local")])?;
     println!("Config: {:#?}", config);
     Ok(())
 }
 ```
+### Multiple .env Fallback
+
+
+You can use `load_iter` to try multiple .env files in order:
+
+```rust
+let config = Config::load_iter([
+    std::path::Path::new(".env.local"),
+    std::path::Path::new(".env"),
+])?;
+```
+This will try `.env.local` first, then `.env` if the first is not found.
 
 ### Environment Variables
+## 🧬 API Reference
+
+```rust
+pub trait FromEnv: Sized {
+    fn load(env_path: &std::path::Path) -> Result<Self, CfgError>;
+    fn load_iter<I, P>(paths: I) -> Result<Self, CfgError>
+    where
+        I: IntoIterator<Item = P>,
+        P: AsRef<std::path::Path>;
+}
+```
+
+- `load(env_path: &Path)`: Load config from a single .env file
+- `load_iter<I, P>(paths: I)`: Try multiple paths, return on first success
 
 ```bash
 # .env file or environment variables
@@ -80,7 +109,7 @@ struct AppConfig {
 struct ServerConfig {
     #[env("SERVER_HOST", default = "127.0.0.1")]
     host: String,
-    
+
     #[env("SERVER_PORT", default = "8080")]
     port: u16,
 }
@@ -89,7 +118,7 @@ struct ServerConfig {
 struct DatabaseConfig {
     #[env("DB_URL", required)]
     url: String,
-    
+
     #[env("DB_MAX_CONNECTIONS", default = "10")]
     max_connections: u32,
 }
@@ -105,11 +134,11 @@ struct Config {
     // Parse comma-separated values
     #[env("ALLOWED_HOSTS", default = "localhost,127.0.0.1", split = ",")]
     allowed_hosts: Vec<String>,
-    
+
     // Parse numbers
     #[env("WORKER_THREADS", default = "1,2,4,8", split = ",")]
     worker_threads: Vec<u32>,
-    
+
     // Custom separator
     #[env("TAGS", default = "web|api|service", split = "|")]
     tags: Vec<String>,
@@ -126,11 +155,11 @@ struct Config {
     // Required - will fail if not provided
     #[env("API_KEY", required)]
     api_key: String,
-    
+
     // Optional with default
     #[env("DEBUG_MODE", default = "false")]
     debug_mode: bool,
-    
+
     // Optional without default (uses type's Default implementation)
     #[env("OPTIONAL_SETTING")]
     optional_setting: String, // Will be empty string if not set
@@ -161,7 +190,7 @@ struct LogLevel(String);
 
 impl FromStr for LogLevel {
     type Err = std::convert::Infallible;
-    
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(LogLevel(s.to_uppercase()))
     }

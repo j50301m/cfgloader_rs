@@ -185,6 +185,27 @@ pub fn derive_from_env(input: TokenStream) -> TokenStream {
                     #(#inits),*
                 })
             }
+
+            fn load_iter<I, P>(paths: I) -> Result<Self, ::cfgloader_rs::CfgError>
+            where
+                I: IntoIterator<Item = P>,
+                P: AsRef<std::path::Path>,
+            {
+                let mut last_err = None;
+                for path in paths {
+                    match Self::load(path.as_ref()) {
+                        Ok(cfg) => return Ok(cfg),
+                        Err(e) => last_err = Some(e),
+                    }
+                }
+                Err(last_err.unwrap_or_else(|| ::cfgloader_rs::CfgError::LoadError {
+                    msg: "no .env file found in any provided path",
+                    source: Box::new(std::io::Error::new(
+                        std::io::ErrorKind::NotFound,
+                        "not found",
+                    )),
+                }))
+            }
         }
     };
 

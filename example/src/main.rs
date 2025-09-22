@@ -82,7 +82,9 @@ struct OtherSettings {
 
 fn main() {
     let dotenv_path = std::path::Path::new(".env");
-    let config = Config::load(dotenv_path).unwrap();
+    let other_env_path = std::path::Path::new("other.env");
+    let config =
+        Config::load_iter(vec![other_env_path, dotenv_path]).expect("Failed to load configuration");
 
     println!("{:#?}", config);
 }
