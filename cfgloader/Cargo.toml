@@ -20,7 +20,7 @@ default = ["derive"]
 derive = ["cfgloader_rs_macros"]
 
 [dependencies]
-cfgloader-core = { version = "1.0.0", path = "../core" }
+cfgloader-core = { version = "1.0.1", path = "../core" }
 
 # Optional dependency on the derive macro
-cfgloader_rs_macros = { version = "1.0.0", path = "../macros", optional = true }
+cfgloader_rs_macros = { version = "1.0.1", path = "../macros", optional = true }
